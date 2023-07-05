@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fiche détaillée</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .info-label {
+            font-weight: bold;
+        }
+
+        .info-value {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fiche détaillée</h1>
+
+        <div class="info-label">Site(s) CEN concerné(s)</div>
+        <div class="info-value" id="site2"></div>
+
+        <div class="info-label">Société / Appellation de l'exploitation</div>
+        <div class="info-value" id="societe2"></div>
+
+        <div class="info-label">Nom</div>
+        <div class="info-value" id="nom2"></div>
+
+        <div class="info-label">Prénom</div>
+        <div class="info-value" id="prenom2"></div>
+
+        <div class="info-label">Contact</div>
+        <div class="info-value" id="contact2"></div>
+
+        <h4>Informations relatives à l'exploitation</h4>
+
+        <div class="info-label">SAU exploitation (ha)</div>
+        <div class="info-value" id="SAU_surf2"></div>
+
+        <div class="info-label">Productions principales</div>
+        <div class="info-value" id="types_prod2"></div>
+
+        <div class="info-label">Produits finis</div>
+        <div class="info-value" id="types_vente2"></div>
+
+        <div class="info-label">Agriculture bio</div>
+        <div class="info-value" id="bio2"></div>
+
+        <h4>Informations relatives au partenariat avec le CEN</h4>
+
+        <div class="info-label">Type de contrat agricole avec le CEN</div>
+        <div class="info-value" id="type_contrat_CEN2"></div>
+
+        <div class="info-label">Surface contractualisée</div>
+        <div class="info-value" id="surf_contractualisee2"></div>
+
+        <div class="info-label">Date de signature</div>
+        <div class="info-value" id="signature2"></div>
+
+        <div class="info-label">Date de prise d'effet</div>
+        <div class="info-value" id="prise_effet2"></div>
+
+        <div class="info-label">Date de fin</div>
+        <div class="info-value" id="fin2"></div>
+
+        <div class="info-label">Grands types de milieux</div>
+        <div class="info-value" id="grands_types_milieux2"></div>
+
+        <div class="info-label">Parcelles concernées</div>
+        <div class="info-value" id="parcelles2"></div>
+
+        <div class="info-label">Chargé(e) de mission référent</div>
+        <div class="info-value" id="charge_mission2"></div>
+
+        <div class="info-label">Remarques</div>
+        <div class="info-value" id="remarques2"></div>
+
+        <div class="text-center">
+            <button type="button" class="btn btn-primary" onclick="editData()">Modifier</button>
+            <button type="button" class="btn btn-secondary" onclick="closeWindow()">Fermer</button>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script>
+        // Get the text input element
+        var textInput = document.getElementById('remarques');
+      
+        // Get the div element
+        var chargeMissionElement = document.getElementById('remarques2');
+      
+        // Add an event listener to the text input
+        textInput.addEventListener('input', function() {
+          // Set the value of the div element as the text input value
+          chargeMissionElement.innerHTML = textInput.value;
+        });
+      </script>
+</body>
+</html>

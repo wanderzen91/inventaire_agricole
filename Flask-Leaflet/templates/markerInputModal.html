@@ -1,0 +1,151 @@
+
+<!-- Modal for marker input -->
+<div class="modal fade" id="markerInputModal">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">
+
+        </h5>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form action="/save_modal_data" method="post">
+            {{ form.csrf_token }}
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-12">
+                  <h4>Informations générales</h4>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    {{ form.site.label }}
+                    {{ form.site(class="form-control") }}
+                  </div>
+                  <div class="form-group">
+                    {{ form.societe.label }}
+                    {{ form.societe(class="form-control") }}
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    {{ form.nom.label }}
+                    {{ form.nom(class="form-control") }}
+                  </div>
+                  <div class="form-group">
+                    {{ form.prenom.label }}
+                    {{ form.prenom(class="form-control") }}
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    {{ form.contact.label }}
+                    {{ form.contact(class="form-control") }}
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <h4>Informations relatives à l'exploitation</h4>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    {{ form.SAU_surf.label }}
+                    {{ form.SAU_surf(class="form-control") }}
+                  </div>
+                  <div class="form-group">
+                    {{ form.types_prod.label }}
+                    {{ form.types_prod(class="form-control") }}
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    {{ form.types_vente.label }}
+                    {{ form.types_vente(class="form-control") }}
+                  </div>
+                  <div class="form-check">
+                    {{ form.bio(class="form-check-input") }}
+                    {{ form.bio.label(class="form-check-label") }}
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <h4>Informations relatives au partenariat avec le CEN</h4>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    {{ form.type_contrat_CEN.label }}
+                    {{ form.type_contrat_CEN(class="form-control") }}
+                  </div>
+                  <div class="form-group">
+                    {{ form.surf_contractualisee.label }}
+                    {{ form.surf_contractualisee(class="form-control") }}
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    {{ form.signature.label }}
+                    {{ form.signature(class="form-control") }}
+                  </div>
+                  <div class="form-group">
+                    {{ form.prise_effet.label }}
+                    {{ form.prise_effet(class="form-control") }}
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    {{ form.fin.label }}
+                    {{ form.fin(class="form-control") }}
+                  </div>
+                  <div class="form-group">
+                    {{ form.grands_types_milieux.label }}
+                    {{ form.grands_types_milieux(class="form-control") }}
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    {{ form.charge_mission.label }}
+                    {{ form.charge_mission(class="form-control") }}
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    {{ form.remarques.label }}
+                    {{ form.remarques(class="form-control", rows=3) }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      {{ form.latitude(class="form-control", readonly="readonly", style="display: none;") }}
+                    </div>
+                    <div class="form-group">
+                      {{ form.longitude(class="form-control", readonly="readonly", style="display: none;") }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          {{ form.submit(class="btn btn-primary", id="save_BDD", value="Valider") }}
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  

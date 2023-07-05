@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Volet Agricole</title>
+    <style>
+      #map {
+          height: 94vh;
+      }
+
+      .links {
+        text-align: center;
+      }
+      
+      .custom-popup {
+        max-width: 1000px;
+        padding: 10px;
+        text-align: center;
+    }
+    
+    .custom-popup h6 {
+        margin: 0;
+        font-size: 18px;
+        color: #1d7519;
+    }
+    
+    .custom-popup .details p {
+        margin: 5px 0;
+    }
+    
+    .custom-popup .action-button {
+        margin-top: 10px;
+    }
+    
+    .custom-popup .action-button .edit_btn {
+      display: inline-block;
+      padding: 5px 10px;
+      background-color: #499eb8;
+      color: white;
+      text-decoration: none;
+      border-radius: 3px;
+      margin-right: 10px;
+  }
+
+  .custom-popup .action-button .delete_btn {
+      display: inline-block;
+      padding: 5px 10px;
+      background-color: #d64c1a;
+      color: white;
+      text-decoration: none;
+      border-radius: 3px;
+  }
+    
+    .custom-popup .action-button .edit_btn:hover {
+        background-color: #3a7385;
+    }
+
+    .custom-popup .action-button .delete_btn:hover {
+      background-color: #d61a1a;
+  }
+
+    #flash-messages {
+        position: absolute;
+        top: 10%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1000;
+    }
+
+    .fade-out {
+      opacity: 0;
+      transition: opacity 15s;
+  }
+
+  .societe-nom {
+    font-weight: bold;
+    color: #2a8532; /* Change 'red' to the desired color */
+  }
+
+  </style>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
+</head>
+<body>
+  
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">WebSIG Congrès - Volet Agricole</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link active" href="#">Carto</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div id="flash-messages">
+  {% with messages = get_flashed_messages() %}
+      {% if messages %}
+          <div class="container mt-4">
+              {% for message in messages %}
+                  <div class="alert alert-info" role="alert">
+                      {{ message }}
+                  </div>
+              {% endfor %}
+          </div>
+      {% endif %}
+  {% endwith %}
+</div>
+
+
+<div id="map"></div>
+
+{% include 'markerInputmodal.html' %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+<script>
+  // Remove flash message with fade-out effect
+  var flashMessages = document.getElementById('flash-messages');
+  if (flashMessages) {
+      flashMessages.classList.add('fade-out');
+      setTimeout(function() {
+          flashMessages.parentNode.removeChild(flashMessages);
+      }, 15000); // Adjust the duration (in milliseconds) as desired
+  }
+
+
+  function handleMapClick(e) {
+    // Get the latitude and longitude values from the clicked coordinates
+    var latitude = e.latlng.lat;
+    var longitude = e.latlng.lng;
+  
+    // Set the latitude and longitude values in the inputs
+    document.getElementById('latitude').value = latitude;
+    document.getElementById('longitude').value = longitude;
+  
+    // Trigger the form modal when the map is clicked
+    openAddModal(); // Call the openAddModal function
+  }
+
+  
+ // Wait for the DOM to be ready
+ $(document).ready(function() {
+    var map = L.map('map').setView([44.9, 0.6], 8);
+    var markerLayer = L.layerGroup().addTo(map);
+
+    {% for row in data %}
+    var lat = {{ row[17] }};
+    var lng = {{ row[18] }};
+    var marker = L.marker([lat, lng]).addTo(markerLayer);
+    var markerID =  {{ row[19] }}
+
+    marker.bindPopup(
+      `
+      <div class="popup-content">
+          <h6>{{ row[0] }}</h6>
+          <br>
+          <div class="details">
+              <p><b>Marker ID:</b> {{ row[19] }}</p>
+              <p><b>Agriculteur:</b> {{ row[1] }} {{ row[2] }}</p>
+              <p><b>Société:</b> {{ row[3] }}</p>
+              <p><b>Contact:</b> {{ row[4] }}</p>
+          </div>
+          <br>
+          <div class="action-button">
+            
+            <a href="{{ url_for('fill_inputs_edit', marker_id=row[19]) }}" class='edit_btn' data-marker-id='{{ row[19] }}' data-societe='{{ row[3] }}''>Modifier les données</a>
+            <a href="{{ url_for('delete_marker', marker_id=row[19]) }}" class="delete_btn" method="POST">Supprimer les données</a>
+          </div>
+      </div>
+      `,
+      { className: 'custom-popup' }
+
+  );
+
+  
+  
+{% endfor %}
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+    }).addTo(map);
+
+    map.on('click', handleMapClick);
+
+
+  // Add markers for existing data
+  // template engine used is Jinja, which is commonly used with Flask. Jinja provides some limited support for accessing values by key (column name) when working with dictionaries or objects so it's better to access value by column index
+
+
+    map.on('click', function (e) {
+
+    var latitudeInput = document.getElementById('latitude');
+    var longitudeInput = document.getElementById('longitude');
+    latitudeInput.value = e.latlng.lat.toFixed(6); // Set latitude value
+    longitudeInput.value = e.latlng.lng.toFixed(6); // Set longitude value
+
+  })
+      
+    });
+
+    function addMarker() {
+      $('#markerInputModal').modal('hide');
+    }
+
+    $('.delete_btn').on('click', function(event) {
+      event.preventDefault();
+    
+      var markerId = $(this).attr('href');
+      var marker = markerLayer.getLayer(markerId);
+    
+      // Send the marker ID to the server to delete it from the database
+      fetch('/delete_marker?id=' + encodeURIComponent(markerId), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          markerId: markerId
+        })
+      }).then(function() {
+        // Remove the marker from the map
+        map.removeLayer(marker);
+      });
+    });
+
+
+
+    function openAddModal() {
+      var modal = document.getElementById('markerInputModal');
+      var modalTitle = modal.querySelector('.modal-title');
+  
+      modalTitle.textContent = 'Ajouter des données';
+  
+      // Additional code to handle other operations when adding data
+  
+      // Open the modal using Bootstrap's modal method
+      $('#markerInputModal').modal('show');
+  }
+  
+  function openEditModal(element) {
+      var modal = document.getElementById('EditMarkerModal');
+      var modalTitle = modal.querySelector('.modal-title');
+      var markerId = element.getAttribute('data-marker-id');
+      var societeNom = element.getAttribute('data-societe');
+
+      modalTitle.textContent = 'Modifier les données pour la société : ' + societeNom;
+  
+      modalTitle.innerHTML = 'Modifier les données pour la société: <span class="societe-nom">' + societeNom + '</span>';
+        
+      // Open the modal using Bootstrap's modal method
+      $('#EditMarkerModal').modal('show');
+  }
+
+  </script>
+
+
+
+
+</body>
+</html>
