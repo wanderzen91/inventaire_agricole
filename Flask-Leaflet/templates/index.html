@@ -5,7 +5,8 @@
     <style>
       #map {
           height: 94vh;
-      }
+          z-index: 1;
+        }
 
       .links {
         text-align: center;
@@ -76,10 +77,68 @@
     color: #2a8532; /* Change 'red' to the desired color */
   }
 
+  
+  #menu {
+    top:5%;
+    right: 200px; /* Adjust the distance from the right edge */
+    font-size: 4em;
+    font-weight: 800;
+    z-index: 1000;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.5s;
+    -webkit-transition: all 0.25s;
+    position: fixed;
+}
+
+#lgMenu {
+    width: 40%;
+    height: 100%;
+    top: 0;
+    right: -40%;
+    overflow: hidden;
+    background-color: white;
+    box-shadow: 5px 5px 10px grey;
+    position: fixed; /* Change to fixed positioning */
+    z-index: 11;
+    opacity: 0;
+    transition: all 0.25s;
+    -webkit-transition: all 0.25s;
+}
+
+#exit {
+    position: absolute;
+    right: 10px;
+    padding: 0px;
+    top: -10px;
+    font-size: 4em;
+    color: black;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s;
+    -webkit-transition: all 0.25s;
+    z-index: 20;
+
+}
+
+#exit:hover {
+    color: #FF9900;
+}
+
+#lgMenu.enter {
+    opacity: 1;
+    right: 0;
+}
+
+
+
+
   </style>
 
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.5.0/dist/MarkerCluster.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.5.0/dist/MarkerCluster.Default.css" />
     <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
 </head>
 <body>
@@ -97,7 +156,10 @@
                 <a class="nav-link active" href="#">Carto</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
+              <a class="nav-link active" href="{{ url_for('tableau') }}">Tableau général</a>
+          </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Dashboard</a>
             </li>
         </ul>
     </div>
@@ -119,6 +181,15 @@
 
 
 <div id="map"></div>
+
+<div id="menu">Menu</div>
+<div id="lgMenu">
+  <span id="exit">&times;</span>
+  {% block external_content %}
+  {% include "modal2.html" %}
+{% endblock %}
+</div>
+<div>
 
 {% include 'markerInputmodal.html' %}
 
@@ -153,7 +224,7 @@
   
  // Wait for the DOM to be ready
  $(document).ready(function() {
-    var map = L.map('map').setView([44.9, 0.6], 8);
+    var map = L.map('map').setView([44.9, 0.6], 7);
     var markerLayer = L.layerGroup().addTo(map);
 
     {% for row in data %}
@@ -175,7 +246,6 @@
           </div>
           <br>
           <div class="action-button">
-            
             <a href="{{ url_for('fill_inputs_edit', marker_id=row[19]) }}" class='edit_btn' data-marker-id='{{ row[19] }}' data-societe='{{ row[3] }}''>Modifier les données</a>
             <a href="{{ url_for('delete_marker', marker_id=row[19]) }}" class="delete_btn" method="POST">Supprimer les données</a>
           </div>
@@ -191,6 +261,18 @@
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
+    }).addTo(map);
+
+
+// Load and display GeoJSON polygon with customized style
+    var geojsonFeature = {{ geojson|tojson }};
+    L.geoJSON(geojsonFeature, {
+        style: {
+            fillColor: 'none',      // Fill color (none for transparent)
+            fillOpacity: 0,         // Fill opacity (0 for fully transparent)
+            color: 'grey',          // Border color
+            weight: 2               // Border width
+        }
     }).addTo(map);
 
     map.on('click', handleMapClick);
@@ -263,6 +345,15 @@
       // Open the modal using Bootstrap's modal method
       $('#EditMarkerModal').modal('show');
   }
+
+  $(document).ready(function(){
+    $("#menu").on("click", function(){
+        $("#lgMenu").addClass("enter");
+    });
+        $("#exit").on("click", function(){
+           $("#lgMenu").removeClass("enter");
+        });
+    });
 
   </script>
 

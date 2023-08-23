@@ -2,10 +2,28 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, FloatField, SelectField, BooleanField, SubmitField, DateField, SelectMultipleField
 from wtforms.validators import InputRequired, Length, Regexp, NumberRange, DataRequired
 from datetime import date
+import psycopg2
+
+
+conn = psycopg2.connect(host='foncier.cen-nouvelle-aquitaine.dev',
+                        database='foncicenprod',
+                        user='agricongres_app',
+                        password="@MT,yvS2D()wP1aPOR's",
+                        port = '5432')
+
+cur = conn.cursor()
+cur.execute("SELECT DISTINCT codesite FROM saisie.site ORDER BY codesite ASC")
+site_choices = [(name, name) for (name,) in cur.fetchall()]
+cur.close()
+
 
 
 class MarkerForm(FlaskForm):
-    site = SelectField('Site(s) CEN concerné(s)', validators=[DataRequired()], choices = [('value1', 'Choice 1'), ('value2', 'Choice 2'), ('value3', 'Choice 3')]) # Replace the choices with your actual options
+
+    id_marker = FloatField('ID', validators=[DataRequired()])
+
+    
+    site = SelectField('Site(s) CEN concerné(s)', validators=[DataRequired()], choices = site_choices) # Replace the choices with your actual options
 
     societe = StringField("Société / Appellation de l'exploitation", validators=[DataRequired()])
 

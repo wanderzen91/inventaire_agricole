@@ -1,0 +1,134 @@
+/* styles.css */
+
+#map {
+    height: 94vh;
+    z-index: 1;
+  }
+
+.links {
+  text-align: center;
+}
+
+.custom-popup {
+  max-width: 1000px;
+  padding: 10px;
+  text-align: center;
+}
+
+.custom-popup h6 {
+  margin: 0;
+  font-size: 18px;
+  color: #1d7519;
+}
+
+.custom-popup .details p {
+  margin: 5px 0;
+}
+
+.custom-popup .action-button {
+  margin-top: 10px;
+}
+
+.custom-popup .action-button .edit_btn {
+display: inline-block;
+padding: 5px 10px;
+background-color: #499eb8;
+color: white;
+text-decoration: none;
+border-radius: 3px;
+margin-right: 10px;
+}
+
+.custom-popup .action-button .delete_btn {
+display: inline-block;
+padding: 5px 10px;
+background-color: #d64c1a;
+color: white;
+text-decoration: none;
+border-radius: 3px;
+}
+
+.custom-popup .action-button .edit_btn:hover {
+  background-color: #3a7385;
+}
+
+.custom-popup .action-button .delete_btn:hover {
+background-color: #d61a1a;
+}
+
+#flash-messages {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+}
+
+.fade-out {
+opacity: 0;
+transition: opacity 15s;
+}
+
+.societe-nom {
+font-weight: bold;
+color: #2a8532; /* Change 'red' to the desired color */
+}
+
+.leaflet-popup {
+padding : 0px;
+
+}
+
+
+#menu {
+top:5%;
+right: 200px; /* Adjust the distance from the right edge */
+font-size: 4em;
+font-weight: 800;
+z-index: 1000;
+cursor: pointer;
+text-align: center;
+transition: all 0.5s;
+-webkit-transition: all 0.25s;
+position: fixed;
+}
+
+#lgMenu {
+width: 40%;
+height: 100%;
+top: 0;
+right: -40%;
+overflow: hidden;
+background-color: white;
+box-shadow: 5px 5px 10px grey;
+position: fixed; /* Change to fixed positioning */
+z-index: 11;
+opacity: 0;
+transition: all 0.25s;
+-webkit-transition: all 0.25s;
+overflow-y: auto;
+}
+
+#exit {
+position: absolute;
+right: 10px;
+padding: 0px;
+top: -10px;
+font-size: 4em;
+color: black;
+font-weight: 500;
+cursor: pointer;
+transition: all 0.25s;
+-webkit-transition: all 0.25s;
+z-index: 20;
+
+}
+
+#exit:hover {
+color: #FF9900;
+}
+
+#lgMenu.enter {
+opacity: 1;
+right: 0;
+}

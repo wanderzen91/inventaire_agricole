@@ -3,6 +3,9 @@ from flask import Flask, render_template, request, url_for, redirect, flash, jso
 import psycopg2
 from forms import MarkerForm
 import secrets
+import json
+from flask_sqlalchemy import SQLAlchemy
+
 
 app = Flask(__name__)
 
@@ -26,8 +29,12 @@ def carte():
     data = cur.fetchall()
     cur.close()
     form = MarkerForm()
+
+
+    with open('depts_na.geojson') as geojson_file:
+        geojson = json.load(geojson_file)
     
-    return render_template('index.html', data=data, form=form)
+    return render_template('index.html', data=data, form=form, geojson=geojson)
 
 
 def get_selected_marker(marker_id):
@@ -45,8 +52,7 @@ def fill_inputs_edit(marker_id):
     marker_data = get_selected_marker(marker_id)
 
     form = MarkerForm()
-    form.societe.data = marker_data[0]
-
+    
     return render_template('modal2.html', data = marker_data, form = form)
     # # return f"'markerId: {form.site}"  # Add this line for debugging
 
@@ -60,7 +66,8 @@ def edit_modal_data():
 
 
     if request.method == 'POST':
-        # Increment the marker ID
+        
+        id = request.form.get('id_marker')
         site_cen = request.form.get('site','test')
         nom_agri = request.form.get('nom','test')
         prenom_agri = request.form.get('prenom','test')
@@ -78,11 +85,9 @@ def edit_modal_data():
         types_milieux = request.form.get('grands_types_milieux','test')
         referent = request.form.get('charge_mission','test')
         remarques = request.form.get('remarques','test')
-        latitude = request.form.get('latitude')
-        longitude = request.form.get('longitude')
 
-        sql = "UPDATE volet_agricole.table_unique_temporaire SET site_cen = %s, nom_agri = %s, prenom_agri = %s, societe = %s, contact = %s, surf_ha = %s, types_productions = %s, produits_finis = %s, agriculture_bio = %s, type_contrat = %s, surf_contractualisee = %s, date_signature = %s, date_prise_effet = %s, date_fin = %s, types_milieux = %s, referent = %s, remarques = %s, latitude = %s, longitude = %s WHERE id = %s"
-        data = (site_cen, nom_agri, prenom_agri, societe, contact, surf_ha, types_productions, produits_finis, agriculture_bio, type_contrat, surf_contractualisee, date_signature, date_prise_effet, date_fin, types_milieux, referent, remarques, latitude, longitude, id)
+        sql = "UPDATE volet_agricole.table_unique_temporaire SET site_cen = %s, nom_agri = %s, prenom_agri = %s, societe = %s, contact = %s, surf_ha = %s, types_productions = %s, produits_finis = %s, agriculture_bio = %s, type_contrat = %s, surf_contractualisee = %s, date_signature = %s, date_prise_effet = %s, date_fin = %s, types_milieux = %s, referent = %s, remarques = %s WHERE id = %s"
+        data = (site_cen, nom_agri, prenom_agri, societe, contact, surf_ha, types_productions, produits_finis, agriculture_bio, type_contrat, surf_contractualisee, date_signature, date_prise_effet, date_fin, types_milieux, referent, remarques, id)
 
         cur.execute(sql, data)
 
@@ -185,8 +190,8 @@ def delete_marker(marker_id):
     # Redirect to the appropriate page after deletion
     return redirect('/')
 
-@app.route('/dashboard')
-def dashboard():
+@app.route('/tableau')
+def tableau():
     cur = conn.cursor()
     cur.execute("SELECT * FROM volet_agricole.table_unique_temporaire")
     rows = cur.fetchall()
@@ -195,7 +200,7 @@ def dashboard():
     columns = [desc[0] for desc in cur.description]
 
     # Pass the columns and data to the template
-    return render_template('dashboard.html', columns=columns, data=rows)
+    return render_template('tableau.html', columns=columns, data=rows)
 
 if __name__ == '__main__':
     app.run(debug=True)

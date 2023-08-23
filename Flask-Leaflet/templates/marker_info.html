@@ -1,49 +1,44 @@
-
-
 <!DOCTYPE html>
 <html>
 <head>
-  
- <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
-    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
+  <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
+  <!-- Add any other necessary stylesheets and scripts here -->
 </head>
-<div class="container-fluid">
-  <div class="row">
-      <div class="col-md-12 text-center">
-          <h2 class="mt-4 ; mb-4">Modifier les données</h2>
-      </div>
-  </div>
-          <form action="/edit_modal_data" method="post">
-            {{ form.csrf_token }}
-            <div class="container-fluid">
-              <div class="row">
-                <div class="col-md-12">
-                  <h4>Informations générales</h4>
-                </div>
+<body>
+  <div class="container-fluid">
+    <br>
+    <form action="/get_selected_marker" method="get">
+      {{ form.csrf_token }}
+      <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <h4>Informations générales</h4>
               </div>
-              <div class="row">
+            </div>
+            <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
                     {{ form.id_marker(class="form-control", value=data[19], readonly="readonly", style="display: none;") }}
                   </div>                  
                   <div class="form-group">
                     {{ form.site.label }}
-                    {{ form.site(class="form-control", value=data[0]) }}
+                    {{ form.site(class="form-control", value=data[0], readonly="readonly") }}
                   </div>
                   <div class="form-group">
                     {{ form.societe.label }}
-                    {{ form.societe(class="form-control", value=data[3]) }}
+                    {{ form.societe(class="form-control", value=data[3], readonly="readonly") }}
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
                     {{ form.nom.label }}
-                    {{ form.nom(class="form-control", value=data[1]) }}
+                    {{ form.nom(class="form-control", value=data[1], readonly="readonly") }}
                   </div>
                   <div class="form-group">
                     {{ form.prenom.label }}
-                    {{ form.prenom(class="form-control", value=data[2]) }}
+                    {{ form.prenom(class="form-control", value=data[2], readonly="readonly") }}
                   </div>
                 </div>
               </div>
@@ -51,7 +46,7 @@
                 <div class="col-md-12">
                   <div class="form-group">
                     {{ form.contact.label }}
-                    {{ form.contact(class="form-control", value=data[4]) }}
+                    {{ form.contact(class="form-control", value=data[4], readonly="readonly") }}
                   </div>
                 </div>
               </div>
@@ -64,20 +59,20 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     {{ form.SAU_surf.label }}
-                    {{ form.SAU_surf(class="form-control", value=data[5]) }}
+                    {{ form.SAU_surf(class="form-control", value=data[5], readonly="readonly") }}
                   </div>
                   <div class="form-group">
                     {{ form.types_prod.label }}
-                    {{ form.types_prod(class="form-control", value=data[6]) }}
+                    {{ form.types_prod(class="form-control", value=data[6], readonly="readonly") }}
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
                     {{ form.types_vente.label }}
-                    {{ form.types_vente(class="form-control", value=data[7]) }}
+                    {{ form.types_vente(class="form-control", value=data[7], readonly="readonly") }}
                   </div>
                   <div class="form-check">
-                    {{ form.bio(class="form-check-input", value=data[8]) }}
+                    {{ form.bio(class="form-check-input", value=data[8], readonly="readonly") }}
                     {{ form.bio.label(class="form-check-label") }}
                   </div>
                 </div>
@@ -91,21 +86,21 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     {{ form.type_contrat_CEN.label }}
-                    {{ form.type_contrat_CEN(class="form-control", value=data[9]) }}
+                    {{ form.type_contrat_CEN(class="form-control", value=data[9], readonly="readonly") }}
                   </div>
                   <div class="form-group">
                     {{ form.surf_contractualisee.label }}
-                    {{ form.surf_contractualisee(class="form-control", value=data[10]) }}
+                    {{ form.surf_contractualisee(class="form-control", value=data[10], readonly="readonly") }}
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
                     {{ form.signature.label }}
-                    {{ form.signature(class="form-control", value=data[11]) }}
+                    {{ form.signature(class="form-control", value=data[11], readonly="readonly") }}
                   </div>
                   <div class="form-group">
                     {{ form.prise_effet.label }}
-                    {{ form.prise_effet(class="form-control", value=data[12]) }}
+                    {{ form.prise_effet(class="form-control", value=data[12], readonly="readonly") }}
                   </div>
                 </div>
               </div>
@@ -113,17 +108,17 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     {{ form.fin.label }}
-                    {{ form.fin(class="form-control", value=data[13]) }}
+                    {{ form.fin(class="form-control", value=data[13], readonly="readonly") }}
                   </div>
                   <div class="form-group">
                     {{ form.grands_types_milieux.label }}
-                    {{ form.grands_types_milieux(class="form-control", value=data[14]) }}
+                    {{ form.grands_types_milieux(class="form-control", value=data[14], readonly="readonly") }}
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
                     {{ form.charge_mission.label }}
-                    {{ form.charge_mission(class="form-control", value=data[15]) }}
+                    {{ form.charge_mission(class="form-control", value=data[15], readonly="readonly") }}
                   </div>
                 </div>
               </div>
@@ -131,7 +126,7 @@
                 <div class="col-md-12">
                   <div class="form-group">
                     {{ form.remarques.label }}
-                    {{ form.remarques(class="form-control", rows=3, value=data[16]) }}
+                    {{ form.remarques(class="form-control", rows=3, value=data[16], readonly="readonly") }}
                   </div>
                 </div>
                 <div class="row">
