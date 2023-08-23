@@ -1,145 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
+
     <title>Volet Agricole</title>
-    <style>
-      #map {
-          height: 94vh;
-          z-index: 1;
-        }
 
-      .links {
-        text-align: center;
-      }
-      
-      .custom-popup {
-        max-width: 1000px;
-        padding: 10px;
-        text-align: center;
-    }
-    
-    .custom-popup h6 {
-        margin: 0;
-        font-size: 18px;
-        color: #1d7519;
-    }
-    
-    .custom-popup .details p {
-        margin: 5px 0;
-    }
-    
-    .custom-popup .action-button {
-        margin-top: 10px;
-    }
-    
-    .custom-popup .action-button .edit_btn {
-      display: inline-block;
-      padding: 5px 10px;
-      background-color: #499eb8;
-      color: white;
-      text-decoration: none;
-      border-radius: 3px;
-      margin-right: 10px;
-  }
-
-  .custom-popup .action-button .delete_btn {
-      display: inline-block;
-      padding: 5px 10px;
-      background-color: #d64c1a;
-      color: white;
-      text-decoration: none;
-      border-radius: 3px;
-  }
-    
-    .custom-popup .action-button .edit_btn:hover {
-        background-color: #3a7385;
-    }
-
-    .custom-popup .action-button .delete_btn:hover {
-      background-color: #d61a1a;
-  }
-
-    #flash-messages {
-        position: absolute;
-        top: 10%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 1000;
-    }
-
-    .fade-out {
-      opacity: 0;
-      transition: opacity 15s;
-  }
-
-  .societe-nom {
-    font-weight: bold;
-    color: #2a8532; /* Change 'red' to the desired color */
-  }
-
-  
-  #menu {
-    top:5%;
-    right: 200px; /* Adjust the distance from the right edge */
-    font-size: 4em;
-    font-weight: 800;
-    z-index: 1000;
-    cursor: pointer;
-    text-align: center;
-    transition: all 0.5s;
-    -webkit-transition: all 0.25s;
-    position: fixed;
-}
-
-#lgMenu {
-    width: 40%;
-    height: 100%;
-    top: 0;
-    right: -40%;
-    overflow: hidden;
-    background-color: white;
-    box-shadow: 5px 5px 10px grey;
-    position: fixed; /* Change to fixed positioning */
-    z-index: 11;
-    opacity: 0;
-    transition: all 0.25s;
-    -webkit-transition: all 0.25s;
-}
-
-#exit {
-    position: absolute;
-    right: 10px;
-    padding: 0px;
-    top: -10px;
-    font-size: 4em;
-    color: black;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.25s;
-    -webkit-transition: all 0.25s;
-    z-index: 20;
-
-}
-
-#exit:hover {
-    color: #FF9900;
-}
-
-#lgMenu.enter {
-    opacity: 1;
-    right: 0;
-}
-
-
-
-
-  </style>
+    <link rel="stylesheet" type="text/css" href="static/css/css_application.css">
 
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.5.0/dist/MarkerCluster.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.5.0/dist/MarkerCluster.Default.css" />
     <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
+
 </head>
 <body>
   
@@ -182,14 +54,13 @@
 
 <div id="map"></div>
 
-<div id="menu">Menu</div>
 <div id="lgMenu">
   <span id="exit">&times;</span>
   {% block external_content %}
   {% include "modal2.html" %}
 {% endblock %}
 </div>
-<div>
+
 
 {% include 'markerInputmodal.html' %}
 
@@ -233,30 +104,17 @@
     var marker = L.marker([lat, lng]).addTo(markerLayer);
     var markerID =  {{ row[19] }}
 
-    marker.bindPopup(
-      `
-      <div class="popup-content">
-          <h6>{{ row[0] }}</h6>
-          <br>
-          <div class="details">
-              <p><b>Marker ID:</b> {{ row[19] }}</p>
-              <p><b>Agriculteur:</b> {{ row[1] }} {{ row[2] }}</p>
-              <p><b>Société:</b> {{ row[3] }}</p>
-              <p><b>Contact:</b> {{ row[4] }}</p>
-          </div>
-          <br>
-          <div class="action-button">
-            <a href="{{ url_for('fill_inputs_edit', marker_id=row[19]) }}" class='edit_btn' data-marker-id='{{ row[19] }}' data-societe='{{ row[3] }}''>Modifier les données</a>
-            <a href="{{ url_for('delete_marker', marker_id=row[19]) }}" class="delete_btn" method="POST">Supprimer les données</a>
-          </div>
-      </div>
-      `,
-      { className: 'custom-popup' }
+// Add a click event listener to each marker
+marker.on('click', function() {
+  $("#lgMenu").addClass("enter");
+});
 
-  );
+// Call the closeLGMenu function when clicking on the exit button
+$("#exit").on("click", function() {
+  $("#lgMenu").removeClass("enter");
+});
 
-  
-  
+
 {% endfor %}
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -346,14 +204,7 @@
       $('#EditMarkerModal').modal('show');
   }
 
-  $(document).ready(function(){
-    $("#menu").on("click", function(){
-        $("#lgMenu").addClass("enter");
-    });
-        $("#exit").on("click", function(){
-           $("#lgMenu").removeClass("enter");
-        });
-    });
+
 
   </script>
 
