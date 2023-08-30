@@ -57,7 +57,7 @@
 <div id="lgMenu">
   <span id="exit">&times;</span>
   {% block external_content %}
-  {% include "modal2.html" %}
+  {% include "marker_info.html" %}
 {% endblock %}
 </div>
 
@@ -92,30 +92,61 @@
     openAddModal(); // Call the openAddModal function
   }
 
-  
- // Wait for the DOM to be ready
- $(document).ready(function() {
+  // Create a function to add markers with popups
+  function addMarkersWithPopups() {
     var map = L.map('map').setView([44.9, 0.6], 7);
-    var markerLayer = L.layerGroup().addTo(map);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+    }).addTo(map);
 
     {% for row in data %}
-    var lat = {{ row[17] }};
-    var lng = {{ row[18] }};
-    var marker = L.marker([lat, lng]).addTo(markerLayer);
-    var markerID =  {{ row[19] }}
+      var lat = {{ row[17] }};
+      var lng = {{ row[18] }};
+      var marker = L.marker([lat, lng]).addTo(map);
 
-// Add a click event listener to each marker
-marker.on('click', function() {
-  $("#lgMenu").addClass("enter");
-});
+      var popupContent = `
+      <div class="custom-popup">
+        <h6>{{ row[0] }}</h6>
+        <br>
+        <div class="details">
+            <p><b>Marker ID:</b> {{ row[19] }}</p>
+            <p><b>Agriculteur:</b> {{ row[1] }} {{ row[2] }}</p>
+            <p><b>Société:</b> {{ row[3] }}</p>
+            <p><b>Contact:</b> {{ row[4] }}</p>
+        </div>
+      </div>
+      `;
 
-// Call the closeLGMenu function when clicking on the exit button
-$("#exit").on("click", function() {
-  $("#lgMenu").removeClass("enter");
-});
+      // Bind popup content to the marker
+    marker.bindPopup(popupContent, { closeButton: false });
 
+    // Add a mouseover event listener to each marker
+    marker.on('mouseover', function(e) {
+      this.openPopup(e.latlng);
+    });
 
-{% endfor %}
+    // Add a mouseout event listener to each marker
+    marker.on('mouseout', function() {
+      this.closePopup();
+    });
+
+    // Add a click event listener to each marker
+    marker.on('click', function() {
+      $("#lgMenu").addClass("enter");
+    });
+
+    // Call the closeLGMenu function when clicking on the exit button
+    $("#exit").on("click", function() {
+      $("#lgMenu").removeClass("enter");
+    });
+
+  {% endfor %}
+}
+
+  // Wait for the DOM to be ready
+  $(document).ready(function() {
+    addMarkersWithPopups();
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
